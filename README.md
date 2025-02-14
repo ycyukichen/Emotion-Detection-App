@@ -88,8 +88,3 @@ pip install -r requirements.txt
 🔹 Improve Face Detection using **Mediapipe**  
 🔹 Optimize for **Mobile & Edge Devices**  
 
----
-
-## 📜 **License**
-📄 This project is **MIT Licensed**.
-
