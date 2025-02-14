@@ -14,7 +14,7 @@ Detects **Angry, Disgust, Fear, Happy, Sad, Surprise, and Neutral** emotions fro
 ---
 
 ## 🚀 **Live Demo**
-🔴 Try it now: **[Your Streamlit App Link](https://your-streamlit-app-link)**  
+🔴 Try it now: **[Your Streamlit App Link](https://realtime-emotion-detection-app.streamlit.app/)**  
 
 ---
 
@@ -38,11 +38,6 @@ streamlit run app.py
 
 ---
 
-## 🎥 **Demo Video**
-[![Watch the Video](https://img.youtube.com/vi/YOUR_VIDEO_ID/0.jpg)](https://www.youtube.com/watch?v=YOUR_VIDEO_ID)  
-📌 _Click the thumbnail to watch the demo._
-
----
 
 ## 🌍 **Deploy on Streamlit Cloud**
 1. Push your code to **GitHub**.
