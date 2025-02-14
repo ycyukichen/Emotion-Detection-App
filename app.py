@@ -77,19 +77,12 @@ face_colors = {}
 
 # ====== WEBCAM FUNCTIONALITY ======
 if st.session_state.run_webcam:
-    video_capture = cv2.VideoCapture(0)
+    image = st.camera_input("Take a picture")
 
-    if not video_capture.isOpened():
-        st.sidebar.error("❌ Error: Could not access webcam.")
-    else:
-        while st.session_state.run_webcam:
-            ret, frame = video_capture.read()
-            if not ret:
-                st.sidebar.error("❌ Error: Failed to grab frame.")
-                break
-
-            # Convert to grayscale
-            gray_frame = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
+    if image is not None:
+        img = Image.open(image)
+        img = np.array(img)
+        gray_frame = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
 
             # Detect faces using Mediapipe
             results = mp_face_detection.process(cv2.cvtColor(frame, cv2.COLOR_BGR2RGB))
