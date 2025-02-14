@@ -2,5 +2,5 @@ streamlit
 opencv-python
 tensorflow
 numpy
-face-recognition
 pillow
+mediapipe
