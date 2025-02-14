@@ -2,6 +2,7 @@
 🚀 **AI-powered real-time emotion recognition using OpenCV, TensorFlow, and Streamlit**.  
 Detects **Angry, Disgust, Fear, Happy, Sad, Surprise, and Neutral** emotions from a live webcam feed.
 
+
 ---
 
 ## 🎯 **Features**
@@ -14,7 +15,7 @@ Detects **Angry, Disgust, Fear, Happy, Sad, Surprise, and Neutral** emotions fro
 ---
 
 ## 🚀 **Live Demo**
-🔴 Try it now: **[Your Streamlit App Link](https://realtime-emotion-detection-app.streamlit.app/)**  
+🔴 Try it now: **[Real-Time Emotion Detection](https://realtime-emotion-detection-app.streamlit.app/)**  
 
 ---
 
@@ -36,15 +37,13 @@ streamlit run app.py
 ```
 🚀 The app will open in your browser at `http://localhost:8501/`.
 
+
 ---
 
 
-## 🌍 **Deploy on Streamlit Cloud**
-1. Push your code to **GitHub**.
-2. Go to **[Streamlit Cloud](https://share.streamlit.io/)**.
-3. Click **"New App"** and select your repo.
-4. Set **Main file path** to `app.py`.
-5. Click **"Deploy"** 🚀.
+## 📌 **App Versions**
+- `app.py` → Uses **Mediapipe** for face detection and takes a **photo for emotion recognition**. Optimized for **Streamlit Cloud Deployment**.  
+- `app1.py` → Uses **face-recognition** (with `dlib`) and **streams video for live emotion detection**. This version is **only for local use** due to deployment issues with `dlib` on Streamlit Cloud.
 
 
 ---
@@ -55,7 +54,7 @@ streamlit run app.py
 - OpenCV
 - TensorFlow
 - Streamlit
-- Face Recognition
+- Face Recognition / Mediapipe (depending on the version used)
 
 Install dependencies:
 ```bash
@@ -67,10 +66,11 @@ pip install -r requirements.txt
 ## 🏗 **Project Structure**
 ```
 📂 Emotion-Detection-App
-│── 📜 app.py          # Main application script
+│── 📜 app.py          # Main application script using Mediapipe (photo-based detection)
+│── 📜 app1.py         # Alternative script using Face-Recognition (video streaming detection)
 │── 📜 requirements.txt # Dependencies
 │── 📜 README.md        # Project documentation
-│── 📂 models           # Pre-trained model
+│── 📂 models           # Pre-trained model for emotion detection
 ```
 
 ---
@@ -90,12 +90,6 @@ pip install -r requirements.txt
 
 ---
 
-## ❤️ **Contributing**
-Feel free to **fork this repo** and submit a **pull request**! 😊
-
----
-
 ## 📜 **License**
 📄 This project is **MIT Licensed**.
-
 
