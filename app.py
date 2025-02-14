@@ -62,13 +62,6 @@ stframe = st.empty()
 # ====== FACE DETECTION SETUP ======
 mp_face_detection = mp.solutions.face_detection.FaceDetection()
 
-# Function to verify if the detected face is human
-def is_human_face(image, face_box):
-    x, y, w, h = face_box
-    face_roi = image[y:y+h, x:x+w]
-    results = mp_face_detection.process(cv2.cvtColor(face_roi, cv2.COLOR_BGR2RGB))
-    return results.detections is not None
-
 # Generate unique colors for detected faces
 def get_random_color():
     return (random.randint(50, 255), random.randint(50, 255), random.randint(50, 255))
@@ -84,52 +77,48 @@ if st.session_state.run_webcam:
         img = np.array(img)
         gray_frame = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
 
-            # Detect faces using Mediapipe
-            results = mp_face_detection.process(cv2.cvtColor(frame, cv2.COLOR_BGR2RGB))
-            human_faces = []
-            if results.detections:
-                for detection in results.detections:
-                    bboxC = detection.location_data.relative_bounding_box
-                    ih, iw, _ = frame.shape
-                    x, y, w, h = int(bboxC.xmin * iw), int(bboxC.ymin * ih), int(bboxC.width * iw), int(bboxC.height * ih)
-                    human_faces.append((x, y, w, h))
+        # Detect faces using Mediapipe
+        results = mp_face_detection.process(cv2.cvtColor(img, cv2.COLOR_BGR2RGB))
+        human_faces = []
+        if results.detections:
+            for detection in results.detections:
+                bboxC = detection.location_data.relative_bounding_box
+                ih, iw, _ = img.shape
+                x, y, w, h = int(bboxC.xmin * iw), int(bboxC.ymin * ih), int(bboxC.width * iw), int(bboxC.height * ih)
+                human_faces.append((x, y, w, h))
 
-            for i, (x, y, w, h) in enumerate(human_faces):
-                # Extract face ROI
-                face_roi = gray_frame[y:y+h, x:x+w]
-                face_roi = cv2.resize(face_roi, (48, 48))
-                face_roi = face_roi.astype("float32") / 255.0
-                face_roi = np.expand_dims(face_roi, axis=0)
-                face_roi = np.expand_dims(face_roi, axis=-1)
+        for i, (x, y, w, h) in enumerate(human_faces):
+            # Extract face ROI
+            face_roi = gray_frame[y:y+h, x:x+w]
+            face_roi = cv2.resize(face_roi, (48, 48))
+            face_roi = face_roi.astype("float32") / 255.0
+            face_roi = np.expand_dims(face_roi, axis=0)
+            face_roi = np.expand_dims(face_roi, axis=-1)
 
-                # Predict emotion
-                preds = st.session_state.emotion_classifier.predict(face_roi)
-                emotion_index = np.argmax(preds)
-                emotion_text = ['Angry', 'Disgust', 'Fear', 'Happy', 'Sad', 'Surprise', 'Neutral'][emotion_index]
-                confidence = round(float(np.max(preds)) * 100, 1)
+            # Predict emotion
+            preds = st.session_state.emotion_classifier.predict(face_roi)
+            emotion_index = np.argmax(preds)
+            emotion_text = ['Angry', 'Disgust', 'Fear', 'Happy', 'Sad', 'Surprise', 'Neutral'][emotion_index]
+            confidence = round(float(np.max(preds)) * 100, 1)
 
-                # Assign unique colors
-                if i not in face_colors:
-                    face_colors[i] = get_random_color()
-                color = face_colors[i]
+            # Assign unique colors
+            if i not in face_colors:
+                face_colors[i] = get_random_color()
+            color = face_colors[i]
 
-                # Draw bounding box
-                cv2.rectangle(frame, (x, y), (x+w, y+h), color, 3)
+            # Draw bounding box
+            cv2.rectangle(img, (x, y), (x+w, y+h), color, 3)
 
-                # Display emotion text with confidence
-                font_scale = 1.5
-                thickness = 3
-                label = f"{emotion_text} ({confidence}%)"
-                text_size = cv2.getTextSize(label, cv2.FONT_HERSHEY_SIMPLEX, font_scale, thickness)[0]
-                text_x = x + (w - text_size[0]) // 2
-                cv2.putText(frame, label, (text_x, y-20), cv2.FONT_HERSHEY_SIMPLEX, font_scale, color, thickness)
+            # Display emotion text with confidence
+            font_scale = 1.5
+            thickness = 3
+            label = f"{emotion_text} ({confidence}%)"
+            text_size = cv2.getTextSize(label, cv2.FONT_HERSHEY_SIMPLEX, font_scale, thickness)[0]
+            text_x = x + (w - text_size[0]) // 2
+            cv2.putText(img, label, (text_x, y-20), cv2.FONT_HERSHEY_SIMPLEX, font_scale, color, thickness)
 
-            # Convert to RGB for Streamlit
-            frame = cv2.cvtColor(frame, cv2.COLOR_BGR2RGB)
+        # Convert to RGB for Streamlit
+        img = cv2.cvtColor(img, cv2.COLOR_BGR2RGB)
 
-            # Display in Streamlit
-            stframe.image(frame, channels="RGB")
-
-        # Release webcam when "Stop" is clicked
-        video_capture.release()
-        cv2.destroyAllWindows()
+        # Display in Streamlit
+        stframe.image(img, channels="RGB")
