@@ -2,7 +2,7 @@ import streamlit as st
 import cv2
 import tensorflow as tf
 import numpy as np
-import face_recognition
+import mediapipe as mp
 import random
 from PIL import Image
 
@@ -60,15 +60,14 @@ if stop_button:
 stframe = st.empty()
 
 # ====== FACE DETECTION SETUP ======
-face_cascade = cv2.CascadeClassifier(cv2.data.haarcascades + 'haarcascade_frontalface_default.xml')
+mp_face_detection = mp.solutions.face_detection.FaceDetection()
 
 # Function to verify if the detected face is human
 def is_human_face(image, face_box):
     x, y, w, h = face_box
     face_roi = image[y:y+h, x:x+w]
-    face_rgb = cv2.cvtColor(face_roi, cv2.COLOR_BGR2RGB)
-    face_landmarks = face_recognition.face_landmarks(face_rgb)
-    return len(face_landmarks) > 0
+    results = mp_face_detection.process(cv2.cvtColor(face_roi, cv2.COLOR_BGR2RGB))
+    return results.detections is not None
 
 # Generate unique colors for detected faces
 def get_random_color():
@@ -92,11 +91,15 @@ if st.session_state.run_webcam:
             # Convert to grayscale
             gray_frame = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
 
-            # Detect faces
-            faces = face_cascade.detectMultiScale(gray_frame, scaleFactor=1.3, minNeighbors=8, minSize=(50, 50))
-
-            # Filter out non-human faces
-            human_faces = [face for face in faces if is_human_face(frame, face)]
+            # Detect faces using Mediapipe
+            results = mp_face_detection.process(cv2.cvtColor(frame, cv2.COLOR_BGR2RGB))
+            human_faces = []
+            if results.detections:
+                for detection in results.detections:
+                    bboxC = detection.location_data.relative_bounding_box
+                    ih, iw, _ = frame.shape
+                    x, y, w, h = int(bboxC.xmin * iw), int(bboxC.ymin * ih), int(bboxC.width * iw), int(bboxC.height * ih)
+                    human_faces.append((x, y, w, h))
 
             for i, (x, y, w, h) in enumerate(human_faces):
                 # Extract face ROI
@@ -117,7 +120,7 @@ if st.session_state.run_webcam:
                     face_colors[i] = get_random_color()
                 color = face_colors[i]
 
-                # Draw rounded bounding box
+                # Draw bounding box
                 cv2.rectangle(frame, (x, y), (x+w, y+h), color, 3)
 
                 # Display emotion text with confidence
