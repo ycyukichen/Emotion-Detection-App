@@ -42,7 +42,7 @@ streamlit run app.py
 
 
 ## 📌 **App Versions**
-- `app.py` → Uses **Mediapipe** for face detection and takes a **photo for emotion recognition**. Optimized for **Streamlit Cloud Deployment**.  
+- `app.py` → Uses **Mediapipe** for face detection and takes a **photo for emotion recognition**. Users need to **click 'Take a Photo'** to analyze their emotion. Optimized for **Streamlit Cloud Deployment**.  
 - `app1.py` → Uses **face-recognition** (with `dlib`) and **streams video for live emotion detection**. This version is **only for local use** due to deployment issues with `dlib` on Streamlit Cloud.
 
 

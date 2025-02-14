@@ -26,6 +26,14 @@ st.markdown(
         text-align: center;
         color: #666;
     }
+    .instructions {
+        font-size: 18px;
+        text-align: center;
+        color: #333;
+        background-color: #e8f5e9;
+        padding: 10px;
+        border-radius: 10px;
+    }
     </style>
     """,
     unsafe_allow_html=True
@@ -33,6 +41,7 @@ st.markdown(
 
 st.markdown('<p class="title">😊 Real-Time Emotion Detection</p>', unsafe_allow_html=True)
 st.markdown('<p class="subtitle">Detect emotions in real-time using AI</p>', unsafe_allow_html=True)
+st.markdown('<p class="instructions">📸 Click "Take a Photo" and then the system will detect emotions automatically.</p>', unsafe_allow_html=True)
 
 # ====== SIDEBAR CONTROLS ======
 st.sidebar.header("🎛 Controls")
